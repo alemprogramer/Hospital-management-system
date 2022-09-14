@@ -28,12 +28,15 @@ const auth = new Auth({
 
 // console.log('auth'+auth.userRegister());
 // console.log(auth)
+//external routers 
+const routers = require('./routers/routers');
+routers(app);
 let {authUser,authAdmin} = auth
 app.use('/user',auth.router(app)); 
-app.get('/', async(req, res) => { 
-    // const Users = req.app.locals.userModel;
-    res.send('authSdk')
-})
+// app.get('/', async(req, res) => { 
+//     // const Users = req.app.locals.userModel;
+//     res.send('authSdk')
+// })
 app.get('/user1',authUser,(req, res)=>{
     res.send('authManager')
 })
