@@ -1,19 +1,18 @@
-import React from 'react';
-import { useCreateUserWithEmailAndPassword, useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
-import auth from '../../firebase.init';
+import React,{  useState} from 'react';
+import auth from '../../config/authConfig';
 import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
 import { Link, useNavigate } from 'react-router-dom';
-import useToken from '../../Hooks/useToken';
 
 const SignUp = () => {
 
-    const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
+    // const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const { register, formState: { errors }, handleSubmit } = useForm();
+    const  [error,setError] = useState('');
 
 
     // update user profile 
-    const [updateProfile, updating, updateError] = useUpdateProfile(auth);
+    // const [updateProfile, updating, updateError] = useUpdateProfile(auth);
 
 
 
@@ -25,35 +24,55 @@ const SignUp = () => {
     let signInErrorMessage;
 
 
-    const [
-        createUserWithEmailAndPassword,
-        user,
-        loading,
-        error,
-    ] = useCreateUserWithEmailAndPassword(auth);
+    // const [
+    //     createUserWithEmailAndPassword,
+    //     user,
+    //     loading,
+    //     error,
+    // ] = useCreateUserWithEmailAndPassword(auth);
 
     //use token custom hook
-    const [token] = useToken(user || gUser);
+    // const [token] = useToken(user || gUser);
 
-    if (token) {
-        // console.log(user || gUser);
-        navigate('/appointment');
-    }
+    // if (token) {
+    //     // console.log(user || gUser);
+    //     navigate('/appointment');
+    // }
 
 
-    const onSubmit = async data => {
-        await createUserWithEmailAndPassword(data.email, data.password);
-        await updateProfile({ displayName: data.name });
-        console.log("update done");
+    // const onSubmit = async data => {
+        // await createUserWithEmailAndPassword(data.email, data.password);
+        // await updateProfile({ displayName: data.name });
+        
+        // console.log("update done");
         // navigate('/appointment');
+    // }
+
+    // if (true) {
+    //     return <Loading></Loading>
+    // }
+
+    // if (true) {
+    //     signInErrorMessage = <p className='text-red-500'><small>{'error?.message || gError?.message || updateError?.message'}</small></p>
+    // }
+    let load = false
+    const registerUser = async(data)=>{
+        
+        try {
+            load = true
+          let res = await auth.userRegistration(data.email,data.password,data.name)
+          if(res.status ===200){
+              navigate('/appointment');
+          } 
+        console.log(data,res);
+        } catch (err) {
+          console.log(err.response.data);
+          setError(err.response.data?.message)
+        }
     }
 
-    if (loading || gLoading || updating) {
+    if (load) {
         return <Loading></Loading>
-    }
-
-    if (error || gError || updateError) {
-        signInErrorMessage = <p className='text-red-500'><small>{error?.message || gError?.message || updateError?.message}</small></p>
     }
 
 
@@ -66,7 +85,7 @@ const SignUp = () => {
                 <div className="card-body">
                     <h2 className="text-center text-2xl font-bold">Sign Up</h2>
 
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={handleSubmit(registerUser)}>
 
 
                         {/* name field  */}
@@ -157,7 +176,8 @@ const SignUp = () => {
                         </div>
 
 
-                        {signInErrorMessage}
+                        {error&& <p className='text-red-500'><small>{error}</small></p>
+}
                         <input className='btn w-full max-w-xs text-white' type="submit" value="SIGN UP" />
                     </form>
 
@@ -167,11 +187,11 @@ const SignUp = () => {
 
 
 
-                    <div className="divider">OR</div>
+                    {/* <div className="divider">OR</div>
                     <button
                         onClick={() => signInWithGoogle()}
                         className="btn btn-outline"
-                    >Continue with Google</button>
+                    >Continue with Google</button> */}
 
                 </div>
             </div>
