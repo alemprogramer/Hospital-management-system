@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react';
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
-import auth from '../../firebase.init';
+import React, { useEffect,useState } from 'react';
+import auth from '../../config/authConfig';
 import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useToken from '../../Hooks/useToken';
 
 const Login = () => {
-    const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
+    // const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const { register, formState: { errors }, handleSubmit } = useForm();
+    const  [error,setError] = useState('');
+
 
     let signInErrorMessage;
 
@@ -21,37 +22,36 @@ const Login = () => {
 
 
 
-    const [
-        signInWithEmailAndPassword,
-        user,
-        loading,
-        error,
-    ] = useSignInWithEmailAndPassword(auth);
+    
 
 
-    //use token custom hook
-    const [token] = useToken(user || gUser);
+    const customLogin = async({email,password})=>{
+        try {
+          let res = await auth.loginWithEmailPassword(email,password)
+          console.log(res);
+        } catch (err) {
+          console.log(err.response.data);
+          setError(err.response.data?.msg)
 
-    const onSubmit = data => {
-        console.log(data);
-        signInWithEmailAndPassword(data.email, data.password);
-    }
+          }
+      }
+      console.log(error);
 
     //for preventing browser errors
-    useEffect(() => {
-        if (token) {
-            // console.log(user || gUser);
-            navigate(from, { replace: true });
-        }
-    }, [token, from, navigate]);
+    // useEffect(() => {
+    //     if (token) {
+    //         // console.log(user || gUser);
+    //         navigate(from, { replace: true });
+    //     }
+    // }, [token, from, navigate]);
 
-    if (loading || gLoading) {
-        return <Loading></Loading>
-    }
+    // if (loading || gLoading) {
+    //     return <Loading></Loading>
+    // }
 
-    if (error || gError) {
-        signInErrorMessage = <p className='text-red-500'><small>{error?.message || gError?.message}</small></p>
-    }
+    // if (error || gError) {
+    //     signInErrorMessage = <p className='text-red-500'><small>{error?.message || gError?.message}</small></p>
+    // }
 
 
 
@@ -62,7 +62,7 @@ const Login = () => {
                 <div className="card-body">
                     <h2 className="text-center text-2xl font-bold">Login</h2>
 
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={handleSubmit(customLogin)}>
 
 
 
@@ -127,21 +127,14 @@ const Login = () => {
                         </div>
 
 
-                        {signInErrorMessage}
+                        {error&& <p className='text-red-500'><small>{error}</small></p>}
                         <input className='btn w-full max-w-xs text-white' type="submit" value="LOGIN" />
                     </form>
 
 
 
                     <p><small>New to Doctor's Portal? <Link className='text-primary' to='/signup'>Create New Account</Link></small> </p>
-
-
-
-                    <div className="divider">OR</div>
-                    <button
-                        onClick={() => signInWithGoogle()}
-                        className="btn btn-outline"
-                    >Continue with Google</button>
+                   
 
                 </div>
             </div>

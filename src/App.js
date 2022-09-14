@@ -1,7 +1,7 @@
 
 import './App.css';
 import Navbar from './Pages/Shared/Navbar';
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link ,useLocation, useNavigate} from "react-router-dom";
 import Home from './Pages/Home/Home';
 import About from './Pages/About/About';
 import Login from './Pages/Login/Login';
@@ -20,9 +20,28 @@ import RequireAdmin from './Pages/Login/RequireAdmin';
 import AddDoctor from './Pages/Dashboard/AddDoctor';
 import ManageDoctors from './Pages/Dashboard/ManageDoctors';
 import Payment from './Pages/Dashboard/Payment';
+import auth from './config/authConfig'
+import React, { useEffect }from 'react'
 
 
 function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+    let from = location.state?.from?.pathname || "/";
+
+  const getUserData = async()=>{
+    try {
+      let res = await auth.userInfo();
+       navigate(from, { replace: true });
+
+      console.log('user',res);
+      console.log('all',auth);
+    } catch (err) {
+      console.log(err.response.data);
+      }
+  }
+  useEffect(()=>getUserData,[])
+
   return (
     <div className='max-w-7xl mx-auto px-12'>
       {/* <button className="btn btn-primary">Button</button> */}
