@@ -3,8 +3,9 @@ const {Schema,model} = require('mongoose');
 const bookingSchema = new Schema({
     doctorId: {
         type: Schema.Types.ObjectId,
-        ref: 'Doctor',
+        ref: 'doctor',
     },
+    slot:String,
     date:String,
     patient:String,
     patientName:String,

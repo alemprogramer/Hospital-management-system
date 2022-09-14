@@ -1,7 +1,10 @@
 const Booking = require('../models/Booking')
 exports.getAllBooking = async (req, res, next) => {
     try {
-        const bookings = await Booking.find();
+        const bookings = await Booking.find().populate({
+            path:'doctorId',
+            select:'name email'
+        });
         res.json({bookings});
         } catch (err) {
             next(err);
