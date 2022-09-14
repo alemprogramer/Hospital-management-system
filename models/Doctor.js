@@ -15,7 +15,9 @@ const DoctorSchema = new Schema({
         type: String,
         require:[true ,'This field is required '],
         trim: true
-    }
+    },
+    slots:[String]
+
 
 },{
     timeStamps: true

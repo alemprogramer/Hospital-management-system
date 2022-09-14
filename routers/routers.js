@@ -1,6 +1,10 @@
 const doctorRouter = require('./doctorRouter')
-const bookingrouter = require('./bookingRouter')
+const bookingRouter = require('./bookingRouter')
 const routers = [
+    {
+        path:'/booking',
+        handler: bookingRouter
+    },
     {
         path:'/doctor',
         handler: doctorRouter
