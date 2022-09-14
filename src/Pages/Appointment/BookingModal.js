@@ -1,10 +1,13 @@
 import React from 'react';
 import { format } from 'date-fns';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../config/authConfig';
 import { toast } from 'react-toastify';
+import {  useNavigate } from 'react-router-dom';
+
+
 const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
-    const { _id, name, slots, price } = treatment;
+    const { _id, name, slots } = treatment;
+    const navigate = useNavigate();
 
     //fetch user information
     // const [user, loading, error] = useAuthState(auth);
@@ -41,6 +44,8 @@ const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
             .then(data => {
                 // console.log(data);
                 if (data.success) {
+                    navigate('/dashboard');
+
                     toast(`Appointment is set, ${formattedDate} at ${slot}`)
                 } else {
                     toast.error(`You already have an Appointment on ${data.booking?.date} at ${data.booking?.slot}`)

@@ -10,14 +10,14 @@ const Navbar = () => {
     console.log(auth);
     const navigate = useNavigate();
     const location = useLocation();
-    let from = location.state?.from?.pathname || "/";
+    // let from = location.state?.from?.pathname || "/";
 
 
     const logout =async ()=>{
         auth.logout();
         // navigate('/loin');
         setData('logout')
-        navigate(from, { replace: false });
+        navigate('/login');
 
      }
       const getUserData = async()=>{

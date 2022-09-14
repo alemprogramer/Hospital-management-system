@@ -27,12 +27,12 @@ import React, { useEffect }from 'react'
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
-    let from = location.state?.from?.pathname || "/";
+    // let from = location.state?.from?.pathname || "/";
 console.log('auth', auth);
   const getUserData = async()=>{
     try {
       let res = await auth.userInfo();
-       navigate(from, { replace: true });
+      //  navigate(from, { replace: true });
 
       console.log('user',res);
       console.log('all',auth);

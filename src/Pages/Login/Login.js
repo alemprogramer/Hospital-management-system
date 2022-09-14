@@ -16,7 +16,7 @@ const Login = () => {
     //for navigating to specific page
     const navigate = useNavigate();
     const location = useLocation();
-    let from = location.state?.from?.pathname || "/";
+    // let from = location.state?.from?.pathname || "/";
 
 
 
@@ -35,7 +35,8 @@ const Login = () => {
                     // console.log(user || gUser);
           toast.success('User login  successfully')
 
-          navigate(from, { replace: true });
+        //   navigate(from, { replace: true });
+          navigate('/appointment');
         //   navigate('/appointment');
             
         } catch (err) {

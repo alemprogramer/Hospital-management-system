@@ -30,6 +30,7 @@ const AddDoctor = () => {
             body: JSON.stringify(data)
         })
         const res = await doctors.json();
+        reset()
         toast.success('Doctor added successfully')
         console.log(res);
         } catch (error) {
