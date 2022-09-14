@@ -1,9 +1,9 @@
-import React, { useEffect,useState } from 'react';
+import React, { useState } from 'react';
 import auth from '../../config/authConfig';
 import { useForm } from "react-hook-form";
-import Loading from '../Shared/Loading';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import useToken from '../../Hooks/useToken';
+import Loading from '../Shared/Loading';
+
 
 const Login = () => {
     // const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
@@ -11,7 +11,6 @@ const Login = () => {
     const  [error,setError] = useState('');
 
 
-    let signInErrorMessage;
 
     //for navigating to specific page
     const navigate = useNavigate();
@@ -24,11 +23,18 @@ const Login = () => {
 
     
 
-
+  let load = false;
     const customLogin = async({email,password})=>{
+
         try {
+            
+          load = true;
           let res = await auth.loginWithEmailPassword(email,password)
           console.log(res);
+                    // console.log(user || gUser);
+          navigate(from, { replace: true });
+        //   navigate('/appointment');
+            
         } catch (err) {
           console.log(err.response.data);
           setError(err.response.data?.msg)
@@ -45,9 +51,9 @@ const Login = () => {
     //     }
     // }, [token, from, navigate]);
 
-    // if (loading || gLoading) {
-    //     return <Loading></Loading>
-    // }
+    if (load) {
+        return <Loading></Loading>
+    }
 
     // if (error || gError) {
     //     signInErrorMessage = <p className='text-red-500'><small>{error?.message || gError?.message}</small></p>

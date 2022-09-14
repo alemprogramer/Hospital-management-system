@@ -13,7 +13,7 @@ const RequireAuth = ({ children }) => {
     //     return <Loading></Loading>
     // }
 
-    if (!auth.token) {
+    if (auth.token == 'Please login') {
         return <Navigate to='/login' state={{ from: location }} replace></Navigate>
     }
 

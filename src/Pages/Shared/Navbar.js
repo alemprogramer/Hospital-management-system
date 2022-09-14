@@ -1,17 +1,35 @@
-import { signOut } from 'firebase/auth';
-import React from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { Link } from 'react-router-dom';
-import auth from '../../firebase.init';
+import React,{ useEffect, useState} from 'react';
+import auth from '../../config/authConfig';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
 
 const Navbar = () => {
 
-    const [user, loading, error] = useAuthState(auth);
+    // const [user, loading, error] = useAuthState(auth);
+    const [data,setData]= useState('')
+    console.log(auth);
+    const navigate = useNavigate();
+    const location = useLocation();
+    let from = location.state?.from?.pathname || "/";
 
-    const logout = () => {
-        signOut(auth);
-        localStorage.removeItem('accessToken');
-    };
+
+    const logout =async ()=>{
+        auth.logout();
+        // navigate('/loin');
+        setData('logout')
+        navigate(from, { replace: false });
+
+     }
+      const getUserData = async()=>{
+        try {
+          let res = await auth.userInfo();
+          console.log('user',res);
+          console.log('all',auth);
+        } catch (err) {
+          console.log(err.response.data);
+          }
+      }
+      useEffect(() =>getUserData,[data])
 
     const menuItems = <>
         <li><Link to="/">Home</Link></li>
@@ -20,11 +38,11 @@ const Navbar = () => {
         <li><Link to="/contact">Contact</Link></li>
         <li><Link to="/about">About</Link></li>
         {
-            user && <li><Link to="/dashboard">Dashboard</Link></li>
+            (auth.token != 'Please login') && <li><Link to="/dashboard">Dashboard</Link></li>
         }
         <li>{
-            user ?
-                <button onClick={logout} className="btn btn-ghost">Sign Out</button>
+            auth.token != 'Please login' ?
+                <button onClick={logout} className="btn btn-ghost">Log Out</button>
                 :
                 <Link to="/Login">Login</Link>
         }</li>
