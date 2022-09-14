@@ -6,32 +6,19 @@ import auth from '../../firebase.init';
 
 const MyAppointments = () => {
     const [appointments, setAppointments] = useState([]);
-    const [user] = useAuthState(auth);
+    // const [user] = useAuthState(auth);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (user) {
-            fetch(`https://obscure-beyond-45774.herokuapp.com/booking?patient=${user.email}`, {
-                method: 'GET',
-                headers: {
-                    'authorization': `Bearer ${localStorage.getItem('accessToken')}`
-                }
-            })
-                .then(res => {
-                    console.log('res', res);
-                    if (res.status === 401 || res.status === 403) {
-                        signOut(auth);
-                        localStorage.removeItem('accessToken');
-                        navigate('/');
-                    }
-                    return res.json()
-                })
+        // if (user) {
+            fetch(`http://localhost:5001/booking`)
+                .then(res =>  res.json())
                 .then(data => {
-
-                    setAppointments(data);
+                    setAppointments(data.bookings)
                 });
-        }
-    }, [user])
+        // }
+    }, [])
+    console.log(appointments);
 
     return (
         <div>
@@ -42,11 +29,11 @@ const MyAppointments = () => {
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Name</th>
+                            <th>Patient Name</th>
                             <th>Date</th>
                             <th>Time</th>
-                            <th>Treatment</th>
-                            <th>Payment</th>
+                            <th>Doctor Name</th>
+                            <th>Option</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,16 +41,12 @@ const MyAppointments = () => {
                             appointments.map((a, index) =>
                                 <tr key={a._id}>
                                     <th>{index + 1}</th>
-                                    <td>{a.patientName}</td>
-                                    <td>{a.date}</td>
-                                    <td>{a.slot}</td>
-                                    <td>{a.treatment}</td>
+                                    <td>{a?.patientName}</td>
+                                    <td>{a?.date}</td>
+                                    <td>{a?.slot}</td>
+                                    <td>{a?.doctorId.name}</td>
                                     <td>
-                                        {(a.price && !a.paid) && <Link to={`/dashboard/payment/${a._id}`}><button className='btn btn-xl btn-success'>Pay</button></Link>}
-                                        {(a.price && a.paid) && <div>
-                                            <p><span className='text-success'>Paid</span></p>
-                                            <p>Transaction id: <span className='text-success'>{a.transactionId}</span></p>
-                                        </div>}
+                                        <button className="btn btn-primary">Delete</button>
                                     </td>
                                 </tr>)
                         }
