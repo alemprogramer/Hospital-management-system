@@ -1,16 +1,15 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useQuery } from 'react-query';
+// import { useQuery } from 'react-query';
 import { toast } from 'react-toastify';
-import Loading from '../Shared/Loading';
+// import Loading from '../Shared/Loading';
 
 const AddDoctor = () => {
 
     const { register, formState: { errors }, handleSubmit, reset } = useForm();
 
-    const { data: services, isLoading } = useQuery('services', () => fetch(`http://localhost:5000/service`).then(res => res.json()))
+    // const { data: services, isLoading } = useQuery('services', () => fetch(`http://localhost:5000/service`).then(res => res.json()))
 
-    const imageStorageKey = '1850bb661d20d500056843eaa0be7710';
 
     /**
      * 3 ways to store images
@@ -21,52 +20,41 @@ const AddDoctor = () => {
      * YUP: to validate file need to study(yup file validation for react form)
     */
     const onSubmit = async data => {
-        const image = data.image[0];
-        const formData = new FormData();
-        formData.append('image', image);
-        const url = `https://api.imgbb.com/1/upload?key=${imageStorageKey}`;
-        fetch(url, {
+        try {
+            const url = `http://localhost:5001/doctor`;
+        const doctors = await fetch(url, {
             method: 'POST',
-            body: formData
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify(data)
         })
-            .then(res => res.json())
-            .then(result => {
-                if (result.success) {
-                    const img = result.data.url;
-                    const doctor = {
-                        name: data.name,
-                        email: data.email,
-                        specialty: data.specialty,
-                        img: img
-                    }
-                    // send to database
-                    fetch('http://localhost:5000/doctor', {
-                        method: 'POST',
-                        headers: {
-                            'content-type': 'application/json',
-                            authorization: `Bearer ${localStorage.getItem('accessToken')}`
-                        },
-                        body: JSON.stringify(doctor)
-                    })
-                        .then(res => res.json())
-                        .then(inserted => {
-                            if (inserted.insertedId) {
-                                toast.success('Doctor added successfully')
-                                reset();
-                            }
-                            else {
-                                toast.error('Failed to add the doctor');
-                            }
-                        })
-                }
-
-            })
-        // navigate('/appointment');
+        const res = await doctors.json();
+        toast.success('Doctor added successfully')
+        console.log(res);
+        } catch (error) {
+            toast.error('Something is error')
+        }
     }
 
-    if (isLoading) {
-        return <Loading></Loading>
-    }
+    // if (isLoading) {
+    //     return <Loading></Loading>
+    // }
+
+    const services =[
+        {
+            id:1,
+            name:'Winson Herry'
+        },
+        {
+            id:2,
+            name:'Winson Herry'
+        },
+        {
+            id:3,
+            name:'Winson Herry'
+        },
+    ]
 
 
     return (
@@ -152,21 +140,6 @@ const AddDoctor = () => {
                 {/* photo input section  */}
 
                 <div className="form-control w-full max-w-xs">
-                    <label className="label">
-                        <span className="label-text">Photo</span>
-                        {/* <span className="label-text-alt">Alt label</span> */}
-                    </label>
-                    <input
-                        type="file"
-                        className="input input-bordered w-full max-w-xs"
-                        {...register("image",
-                            {
-                                required: {
-                                    value: true,
-                                    message: 'Image is Required'
-                                }
-                            })}
-                    />
                     <label className="label">
 
                         {errors.name?.type === 'required' && <span className="label-text-alt text-red-500">{errors.name.message}</span>}

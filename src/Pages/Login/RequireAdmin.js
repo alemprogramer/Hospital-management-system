@@ -13,11 +13,11 @@ const RequireAdmin = ({ children }) => {
     const location = useLocation();
 
     //this loading is for handel special case
-    if (loading || adminLoading) {
-        return <Loading></Loading>
-    }
+    // if (loading || adminLoading) {
+    //     return <Loading></Loading>
+    // }
 
-    if (!user || !admin) {
+    if (false) {
         signOut(auth);
         return <Navigate to='/login' state={{ from: location }} replace></Navigate>
     }
