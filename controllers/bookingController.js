@@ -1,5 +1,6 @@
 const Booking = require('../models/Booking')
 exports.getAllBooking = async (req, res, next) => {
+    console.log(req.user);
     try {
         const bookings = await Booking.find().populate({
             path:'doctorId',

@@ -10,6 +10,7 @@ const bookingSchema = new Schema({
     patient:String,
     patientName:String,
     phone:String,
+    userId:String,
 },{
     timeStamps: true
 })
