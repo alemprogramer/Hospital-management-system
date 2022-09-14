@@ -1,12 +1,10 @@
-import { signOut } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { Link, useNavigate } from 'react-router-dom';
-import auth from '../../firebase.init';
+import { toast } from 'react-toastify';
+
 
 const MyAppointments = () => {
     const [appointments, setAppointments] = useState([]);
-    // const [user] = useAuthState(auth);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -19,6 +17,14 @@ const MyAppointments = () => {
         // }
     }, [])
     console.log(appointments);
+    const deleteAppointment = async(id)=>{
+        fetch(`http://localhost:5001/booking/${id}`)
+            .then(res =>  res.json())
+            .then(data => {
+                toast.success('Appointment deleted successfully')
+                setAppointments(data.bookings)
+            });
+    }
 
     return (
         <div>
@@ -46,7 +52,7 @@ const MyAppointments = () => {
                                     <td>{a?.slot}</td>
                                     <td>{a?.doctorId.name}</td>
                                     <td>
-                                        <button className="btn btn-primary">Delete</button>
+                                        <button onClick={()=>deleteAppointment(a._id)} className="btn btn-primary">Delete</button>
                                     </td>
                                 </tr>)
                         }
