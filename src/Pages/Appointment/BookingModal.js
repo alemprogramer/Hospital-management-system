@@ -14,14 +14,14 @@ const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
     const handleBooking = event => {
         event.preventDefault();
         const slot = event.target.slot.value;
-        // console.log(_id, slot);
+        console.log(_id, slot,formattedDate);
 
         const booking = {
             treatmentId: _id,
-            treatment: name,
+            // treatment: name,
             date: formattedDate,
             slot: slot,
-            price: price,
+            // price: price,
             patient: auth.user.email,
             patientName: auth.user.displayName,
             phone: event.target.phone.value
@@ -29,7 +29,7 @@ const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
 
         // console.log(booking);
 
-        fetch('https://obscure-beyond-45774.herokuapp.com/booking', {
+        fetch('http://localhost:5001/booking', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
@@ -40,7 +40,7 @@ const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
             .then(data => {
                 // console.log(data);
                 if (data.success) {
-                    toast(`Appointmnet is set, ${formattedDate} at ${slot}`)
+                    toast(`Appointment is set, ${formattedDate} at ${slot}`)
                 } else {
                     toast.error(`You already have an Appointment on ${data.booking?.date} at ${data.booking?.slot}`)
                 }

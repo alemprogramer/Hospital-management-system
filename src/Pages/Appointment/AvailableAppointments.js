@@ -7,6 +7,7 @@ import Service from './Service';
 
 const AvailableAppointments = ({ date }) => {
     // const [services, setServices] = useState([]);
+    const [doctor,setDoctor] = useState([])
 
     const [treatment, setTreatment] = useState(null);
 
@@ -17,6 +18,23 @@ const AvailableAppointments = ({ date }) => {
         fetch(`https://obscure-beyond-45774.herokuapp.com/available?date=${formatedDate}`)
             .then(res => res.json())
     )
+
+    const getDoctor = async ()=>{
+        try{
+            const response = await fetch(`http://localhost:5001/doctor`)
+            const data = await response.json()
+            console.log(data);
+            setDoctor(data.doctor)
+
+        }catch(err){
+            console.log(err);
+        }
+    }
+  
+    useEffect(() =>{
+        getDoctor()
+    },[])
+    console.log('doctor',services);
 
     if (isLoading) {
         return <Loading></Loading>
@@ -32,10 +50,11 @@ const AvailableAppointments = ({ date }) => {
             <h4 className='text-xl text-center text-secondary my-12'>Available Appointments on  {format(date, 'PP')}</h4>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
                 {
-                    services?.map((service) =>
-                        <Service key={service._id}
-                            service={service}
+                    doctor?.map((d) =>
+                        <Service key={d._id}
+                            service={d}
                             setTreatment={setTreatment}></Service>
+                        // <h1>{d.name}</h1>
                     )
                 }
             </div>
