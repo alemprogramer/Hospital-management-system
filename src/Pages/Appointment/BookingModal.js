@@ -1,14 +1,14 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import auth from '../../firebase.init';
+import auth from '../../config/authConfig';
 import { toast } from 'react-toastify';
 const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
     const { _id, name, slots, price } = treatment;
 
     //fetch user information
-    const [user, loading, error] = useAuthState(auth);
-
+    // const [user, loading, error] = useAuthState(auth);
+    
     const formattedDate = format(date, 'PP');
 
     const handleBooking = event => {
@@ -22,8 +22,8 @@ const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
             date: formattedDate,
             slot: slot,
             price: price,
-            patient: user.email,
-            patientName: user.displayName,
+            patient: auth.user.email,
+            patientName: auth.user.displayName,
             phone: event.target.phone.value
         }
 
@@ -66,8 +66,8 @@ const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
                                 slots.map((slot, index) => <option key={index} value={slot}>{slot}</option>)
                             }
                         </select>
-                        <input type="text" name="name" disabled value={user?.displayName || ''} className="input input-bordered w-full max-w-xs" />
-                        <input type="email" name="email" disabled value={user?.email} className="input input-bordered w-full max-w-xs" />
+                        <input type="text" name="name" disabled value={auth.user?.name || ''} className="input input-bordered w-full max-w-xs" />
+                        <input type="email" name="email" disabled value={auth.user?.email} className="input input-bordered w-full max-w-xs" />
                         <input type="text" name="phone" placeholder="Phone Number" className="input input-bordered w-full max-w-xs" />
                         <input type="submit" value="Submit" className="btn btn-secondary w-full max-w-xs" />
                     </form>
