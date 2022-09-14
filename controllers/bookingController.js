@@ -21,3 +21,17 @@ exports.postBooking = async (req, res, next) => {
             next(err);
         }   
 }
+exports.deleteBooking = async (req, res, next) => {
+    try {
+        const booking = await Booking.findOneAndDelete(req.param.id);
+        res.json({
+            bookings:await Booking.find().populate({
+                path:'doctorId',
+                select:'name email'
+            }),
+            success: true
+        });
+        } catch (err) {
+            next(err);
+        }
+}
