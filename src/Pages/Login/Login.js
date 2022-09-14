@@ -3,6 +3,7 @@ import auth from '../../config/authConfig';
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Loading from '../Shared/Loading';
+import { toast } from 'react-toastify';
 
 
 const Login = () => {
@@ -32,6 +33,8 @@ const Login = () => {
           let res = await auth.loginWithEmailPassword(email,password)
           console.log(res);
                     // console.log(user || gUser);
+          toast.success('User login  successfully')
+
           navigate(from, { replace: true });
         //   navigate('/appointment');
             

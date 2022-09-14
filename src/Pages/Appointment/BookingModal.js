@@ -24,7 +24,8 @@ const BookingModal = ({ treatment, date, setTreatment, refetch }) => {
             // price: price,
             patient: auth.user.email,
             patientName: auth.user.name,
-            phone: event.target.phone.value
+            phone: event.target.phone.value,
+            userId:auth.user._id
         }
 
         // console.log(booking);

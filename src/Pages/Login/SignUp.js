@@ -3,6 +3,8 @@ import auth from '../../config/authConfig';
 import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 
 const SignUp = () => {
 
@@ -11,50 +13,9 @@ const SignUp = () => {
     const  [error,setError] = useState('');
 
 
-    // update user profile 
-    // const [updateProfile, updating, updateError] = useUpdateProfile(auth);
-
-
-
-
     //for navigation after signup or updating
     const navigate = useNavigate();
 
-
-    let signInErrorMessage;
-
-
-    // const [
-    //     createUserWithEmailAndPassword,
-    //     user,
-    //     loading,
-    //     error,
-    // ] = useCreateUserWithEmailAndPassword(auth);
-
-    //use token custom hook
-    // const [token] = useToken(user || gUser);
-
-    // if (token) {
-    //     // console.log(user || gUser);
-    //     navigate('/appointment');
-    // }
-
-
-    // const onSubmit = async data => {
-        // await createUserWithEmailAndPassword(data.email, data.password);
-        // await updateProfile({ displayName: data.name });
-        
-        // console.log("update done");
-        // navigate('/appointment');
-    // }
-
-    // if (true) {
-    //     return <Loading></Loading>
-    // }
-
-    // if (true) {
-    //     signInErrorMessage = <p className='text-red-500'><small>{'error?.message || gError?.message || updateError?.message'}</small></p>
-    // }
     let load = false
     const registerUser = async(data)=>{
         
@@ -62,6 +23,8 @@ const SignUp = () => {
             load = true
           let res = await auth.userRegistration(data.email,data.password,data.name)
           if(res.status ===200){
+            toast.success('User Sing Up successfully')
+
               navigate('/appointment');
           } 
         console.log(data,res);
